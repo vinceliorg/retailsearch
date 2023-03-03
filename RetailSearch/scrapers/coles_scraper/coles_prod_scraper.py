@@ -1,18 +1,30 @@
+from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 import time
 
 driver_path = '/usr/local/bin/chromedriver'
 
-driver = Chrome(executable_path=driver_path)
+chrome_options = webdriver.ChromeOptions()
+# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("window-size=1024,768")
+chrome_options.add_argument("--no-sandbox")
+
+driver = Chrome(executable_path=driver_path,chrome_options=chrome_options)
+i = 0 
 
 filename = 'coles_prod_urls.txt'
 with open(filename) as file:
     urls = [line.rstrip() for line in file]
 
+f = open("coles_products.csv", "a")
+
 def parse(url):
     try: 
-        print(url)
+        global i
+        i = i+1
+        print(f'extracting {i}th url: {url}')
         driver.get(url)
         record={}
         xpath = '//span[@class="product-brand"]'
@@ -40,15 +52,16 @@ def parse(url):
             imgs.append(href )
         record = f'{brand}\t{product_name}\t{price}\t{package_size}\t{package_price}\t"{product_body}"\t{imgs}\n'
         f.write(record)
+        time.sleep(100)
+        
     except:
         print('error, going to retry')
+        time.sleep(10)
         parse(url)
 
-f = open("coles_products.csv", "a")
-
 for url in urls:
-    parse(url)
+    if 'product/' in url:
+        parse(url)
     
-
 driver.quit()
 f.close()

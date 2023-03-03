@@ -4,10 +4,14 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from w3lib.http import basic_auth_header 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
+class CustomProxyMiddleware:
+    def process_request(self, request, spider):
+        request.meta["proxy"] = "sydney.wonderproxy.com:11000"
+        request.headers["Proxy-Authorization"] = basic_auth_header("vli", "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")
 
 class ScrapersSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,

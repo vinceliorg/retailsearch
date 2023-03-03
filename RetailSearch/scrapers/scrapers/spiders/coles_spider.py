@@ -6,13 +6,18 @@ import scrapy
 class ColesSpider(scrapy.Spider):
     name = "coles"
     def start_requests(self):
-        urls = [
-            'https://shop.coles.com.au/a/national/product/coles-elevate-dry-dg-fd-healthy-weight-chicken'
-        ]
+        filename = '/Users/vli/Work/RetailSearch/RetailSearch/scrapers/coles_scraper/coles_prod_urls_v2_8.csv'
+        with open(filename) as file:
+            urls = [line.rstrip() for line in file]
         for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+            yield scrapy.Request(url, meta={"playwright": True})
 
     def parse(self, response):
         yield {
-            'brand': response.xpath("//span[@class='product-brand']/text()").get()
+            'title': response.xpath('//h1[@data-testid="title"]/text()').get(),
+            'price': response.xpath('//span[@data-testid="pricing"]/text()').get(),
+            'package_price': response.xpath('//span[@class="price__calculation_method"]/text()').get(),
+            'product_image': response.xpath('//img[@data-testid="product-image-0"]/@src').get(),
+            'product_details': response.xpath('//div[@data-testid="section-header"]').get(),
+            'url': response.url
         }
