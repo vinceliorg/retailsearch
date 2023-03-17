@@ -1,0 +1,6 @@
+selenium
+faiss_cpu
+pandas
+elasticsearch
+redis
+pystache

@@ -1,0 +1,45 @@
+{
+"settings": {
+        "number_of_shards": 1,
+        "index" : {
+            "similarity" : {
+              "default" : {
+                "type" : "BM25",
+                "b": 0.7,
+                "k1": 0.1
+              }
+            }
+        }
+      },
+  "mappings" : {
+      "properties" : {
+        "id" : {
+          "type" : "keyword"
+        },
+        "tiltle" : {
+          "type" : "text"
+        },
+        "source" : {
+            "type" : "text"
+          },
+        "pricetext" : {
+          "type" : "text"
+        },
+        "price" : {
+          "type" : "float"
+        },
+        "packageprice" : {
+          "type" : "text"
+        }
+        ,
+        "productimage" : {
+          "type" : "text"
+        },
+        "productdetails" : {
+          "type" : "text"
+        },
+        "url" : {
+          "type" : "text"
+        }
+      }}
+}
